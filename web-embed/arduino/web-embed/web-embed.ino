@@ -10,12 +10,14 @@
 #define DEFAULT_SSID "NOEY_WIFI_2.4G";
 #define DEFAULT_PASS "12341234"
 
+
+
 String myAPssid = "ESP32-AP";
 String myAPpassword = "12345678";
 
 String apSsid = DEFAULT_SSID;
 String apPass = DEFAULT_PASS;
-
+bool STA_STATUS = false;
 
 WebServer server(80);
 
@@ -177,9 +179,11 @@ void setup(void) {
 
   if (WiFi.status() != WL_CONNECTED) {
     WiFi.disconnect();
+    STA_STATUS = false;
     Serial.println("fail");
   } else {
     Serial.println("success");
+    STA_STATUS = true;
     Serial.println("ip (STA): " + (WiFi.localIP()).toString());
   }
 
@@ -220,7 +224,9 @@ void setup(void) {
 }
 
 void loop(void) {
-//  handleLed();
+  if (STA_STATUS == false){
+    handleLed();
+  }
   server.handleClient();
   delay(2);//allow the cpu to switch to other tasks
 }
